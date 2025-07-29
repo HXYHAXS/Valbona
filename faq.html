@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ - Valbona Banka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --text: #181818;
+      --accent: #b97a7a;
+      --border: #e0e0e0;
+    }
+    body.dark-theme {
+      --bg: #181818;
+      --text: #f7f7f7;
+      --accent: #b97a7a;
+      --border: #444;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      padding: 16px 32px;
+      background: var(--bg);
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .logo {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    main {
+      padding: 32px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .faq {
+      margin-top: 32px;
+    }
+
+    .faq-item {
+      margin-bottom: 24px;
+      border-left: 4px solid var(--accent);
+      padding: 16px;
+      background: var(--bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 10px;
+    }
+
+    .faq-item h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .back-home {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .back-home a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Valbona Banka</div>
+    <nav>
+      <a href="index.html" data-i18n="homepage">Faqja Kryesore</a>
+      <a href="blog&awards.html">Blog & Çmime</a>
+      <a href="faq.html">FAQ</a>
+      <button class="toggle-btn" id="theme-toggle">🌓</button>
+    </nav>
+  </header>
+  <main>
+    <h1>Pyetje të Bëra Shpesh (FAQ)</h1>
+    <section class="faq">
+      <div class="faq-item">
+        <h3>Jeni me profesion inxhiniere mjedisi, si lindi dëshira për të shkruar?</h3>
+        <p>Profesioni më ka ushqyer dashurinë për natyrën, ndërsa leximi, dashurinë për letërsinë. Dëshira për të shkruar, mbërriti në kohën kur fëmijët e mi nuk ngopeshin me përralla, ndaj shumë prej tyre i krijoja enkas për ta. Vendosa që t’i shkruaj një pjesë të krijimeve, për t’i patur kujtim. E ndërsa i hidhja në letër, zbulova pasionin që më priste me durim, për të rrugëtuar së bashku.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Përse keni zgjedhur të shkruani libra për fëmijë?</h3>
+        <p>Letërsia për fëmijë në vendin tonë, ka nevojë për autorë të rinj, krijime bashkëkohore, për t’i afruar fëmijët dhe të rinjtë me librin.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Ju vetë, cilin prej librave tuaj keni të preferuar dhe do ta veçonit nga të tjerët, dhe pse?</h3>
+        <p>Unë vlerësoj çdo libër për mesazhet që përcjell te lexuesi, dinamikën e ngjarjeve dhe veçorinë e personazheve. Të katërt romanet përcjellin mesazhe të rëndësishme, si, dashuria për familjen, vendlindjen, njohjes së vetvetes… Janë histori krejt të ndryshme nga njëra-tjetra, me personazhe unike. “Aria” është një uragan, “Kërshëria” është i madhërishëm, “Zoti Ash”, misterioz dhe enigmatik.</p>
+      </div>
+    </section>
+    <div class="back-home">
+      <a href="index.html">← Kthehu në faqen kryesore</a>
+    </div>
+  </main>
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const prefersDark = document.body.classList.contains('dark-theme');
+      localStorage.setItem('prefers-dark', prefersDark);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('prefers-dark') === 'true') {
+        document.body.classList.add('dark-theme');
+      }
+    });
+  </script>
+</body>
+</html>

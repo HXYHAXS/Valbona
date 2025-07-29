@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<style>
+:root {
+    --slideshow-bg: #181818;
+    --slideshow-container-bg: #222;
+    --slideshow-slide-bg: #222;
+    --slideshow-indicator: #b97a7a;
+    --slideshow-indicator-active: #fff;
+    --slideshow-border: #b97a7a;
+    --slideshow-title: #b97a7a;
+}
+body.light-theme {
+    --slideshow-bg: #f7f7f7;
+    --slideshow-container-bg: #fff;
+    --slideshow-slide-bg: #fff;
+    --slideshow-indicator: #b97a7a;
+    --slideshow-indicator-active: #181818;
+    --slideshow-border: #b97a7a;
+    --slideshow-title: #b97a7a;
+}
+.book-slideshow-section {
+    margin: 0;
+    padding: 0;
+    background: var(--slideshow-bg);
+    transition: background-color 0.3s ease;
+}
+.slideshow-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 40px auto 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    background: var(--slideshow-container-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid var(--slideshow-border);
+    transition: background 0.3s, border 0.3s;
+}
+.slideshow-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: var(--slideshow-title);
+    font-size: 1.35rem;
+    letter-spacing: 1px;
+    margin: 24px 0 0 0;
+    text-align: center;
+}
+.slideshow-slide-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 340px;
+}
+.slideshow-slide {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 340px;
+    background: var(--slideshow-slide-bg);
+    border-radius: 14px;
+    transition: background-color 0.3s ease;
+}
+.slideshow-slide.active {
+    display: flex;
+}
+.slideshow-slide img {
+    max-height: 320px;
+    max-width: 220px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    transition: transform 0.4s cubic-bezier(.4,2,.6,1), box-shadow 0.4s;
+    cursor: pointer;
+    border: 2px solid var(--slideshow-border);
+    background: var(--slideshow-slide-bg);
+}
+.slideshow-slide img:hover {
+    transform: scale(1.12);
+    box-shadow: 0 8px 32px rgba(185,122,122,0.25);
+    z-index: 2;
+    border-color: #181818;
+}
+.slideshow-indicators {
+    position: relative;
+    margin: 18px 0 24px 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.slideshow-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--slideshow-indicator);
+    opacity: 0.4;
+    transition: opacity 0.2s, background 0.2s;
+    cursor: pointer;
+    border: 1.5px solid var(--slideshow-border);
+}
+.slideshow-indicator.active {
+    opacity: 1;
+    background: var(--slideshow-indicator-active);
+    border-color: var(--slideshow-border);
+}
+@media (max-width: 600px) {
+    .slideshow-container {
+        max-width: 98vw;
+        min-height: 200px;
+    }
+    .slideshow-slide-row {
+        min-height: 180px;
+    }
+    .slideshow-slide img {
+        max-height: 140px;
+        max-width: 90px;
+    }
+}
+</style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Showcase</title>    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .book-slideshow-section {
+        margin: 0;
+        padding: 0;
+        background: var(--slideshow-bg); /* Theme-aware background */
+        transition: background-color 0.3s ease;
+    }
+
+    .slideshow-container {
+        width: 100%;
+        max-width: 700px;
+        margin: 40px auto 0 auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+        background: var(--slideshow-container-bg); /* Theme-aware */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 2px solid var(--slideshow-border);
+        transition: background 0.3s, border 0.3s;
+    }
+
+    .slideshow-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: var(--slideshow-title); /* Theme-aware */
+        font-size: 1.35rem;
+        letter-spacing: 1px;
+        margin: 24px 0 0 0;
+        text-align: center;
+    }
+
+    .slideshow-slide-row {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 340px;
+    }
+
+    .slideshow-slide {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 340px;
+        background: var(--slideshow-slide-bg); /* Theme-aware */
+        border-radius: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    .slideshow-slide.active {
+        display: flex;
+    }
+
+    .slideshow-slide img {
+        max-height: 320px;
+        max-width: 220px;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+        transition: transform 0.4s cubic-bezier(.4, 2, .6, 1), box-shadow 0.4s;
+        cursor: pointer;
+        border: 2px solid var(--slideshow-border); /* Theme-aware */
+        background: var(--slideshow-slide-bg);     /* Theme-aware */
+    }
+
+    .slideshow-slide img:hover {
+        transform: scale(1.12);
+        box-shadow: 0 8px 32px rgba(185, 122, 122, 0.25);
+        z-index: 2;
+        border-color: #181818;
+    }
+
+    .slideshow-indicators {
+        position: relative;
+        margin: 18px 0 24px 0;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .slideshow-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--slideshow-indicator);
+        opacity: 0.4;
+        transition: opacity 0.2s, background 0.2s;
+        cursor: pointer;
+        border: 1.5px solid var(--slideshow-border);
+    }
+
+    .slideshow-indicator.active {
+        opacity: 1;
+        background: var(--slideshow-indicator-active);
+        border-color: var(--slideshow-border);
+    }
+
+    @media (max-width: 600px) {
+        .slideshow-container {
+            max-width: 98vw;
+            min-height: 200px;
+        }
+
+        .slideshow-slide-row {
+            min-height: 180px;
+        }
+
+        .slideshow-slide img {
+            max-height: 140px;
+            max-width: 90px;
+        }
+    }
+</style>
+
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-flex">
+            <div class="site-title" data-i18n="siteTitle">BOOK SHOWCASE</div>
+            <nav>
+                <a href="index.html" data-i18n="homepage">Faqja Kryesore</a>
+                <a href="blog&awards.html">Blog & Çmime</a>
+                <a href="faq.html">FAQ</a>
+            </nav>            
+            <div class="header-controls">
+                <button id="lang-toggle" class="toggle-btn" aria-label="Switch language">EN</button>
+                <button id="theme-toggle" class="toggle-btn" aria-label="Switch theme">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- Slideshow moved below header, styled to match site -->
+    <section class="book-slideshow-section">
+        <div class="slideshow-container" id="book-slideshow">
+            <div class="slideshow-title">Book Gallery</div>
+            <div class="slideshow-slide-row">
+                <div class="slideshow-slide active">
+                    <a href="tekno-broni.html" tabindex="-1">
+                        <img src="https://cloudfront.bukinist.al/28377-large_default/tekno-broni.jpg" alt="Tekno-Broni" />
+                    </a>
+                </div>
+                <div class="slideshow-slide">
+                    <a href="aria-hidh-e-prit.html" tabindex="-1">
+                        <img src="https://cloudfront.bukinist.al/24199-large_default/aria-hidh-e-prit.jpg" alt="Aria Hidh e Prit" />
+                    </a>
+                </div>
+                <div class="slideshow-slide">
+                    <a href="aria-fet-e-fet.html" tabindex="-1">
+                        <img src="https://cloudfront.bukinist.al/26317-large_default/aria-fet-e-fet.jpg" alt="Aria Fet e fet" />
+                    </a>
+                </div>
+                <div class="slideshow-slide">
+                    <a href="aria-ne-doren-time.html" tabindex="-1">
+                        <img src="https://cloudfront.bukinist.al/28783-large_default/aria-ne-doren-time.jpg" alt="Aria Në dorën time" />
+                    </a>
+                </div>
+            </div>
+            <div class="slideshow-indicators" id="slideshow-indicators">
+                <span class="slideshow-indicator active" data-slide="0"></span>
+                <span class="slideshow-indicator" data-slide="1"></span>
+                <span class="slideshow-indicator" data-slide="2"></span>
+                <span class="slideshow-indicator" data-slide="3"></span>
+            </div>
+        </div>
+    </section>
+    <script>
+        (function() {
+            const slides = document.querySelectorAll('.slideshow-slide');
+            const indicators = document.querySelectorAll('.slideshow-indicator');
+            let current = 0;
+            let interval = null;
+            let paused = false;
+
+            function showSlide(idx) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === idx);
+                    indicators[i].classList.toggle('active', i === idx);
+                });
+                current = idx;
+            }
+
+            function nextSlide() {
+                let next = (current + 1) % slides.length;
+                showSlide(next);
+            }
+
+            function startSlideshow() {
+                if (interval) clearInterval(interval);
+                interval = setInterval(() => {
+                    if (!paused) nextSlide();
+                }, 2600);
+            }
+
+            // Pause on hover (any slide image)
+            slides.forEach((slide, idx) => {
+                const img = slide.querySelector('img');
+                img.addEventListener('mouseenter', () => { paused = true; });
+                img.addEventListener('mouseleave', () => { paused = false; });
+            });
+
+            // Indicator click
+            indicators.forEach((ind, idx) => {
+                ind.addEventListener('click', () => {
+                    showSlide(idx);
+                });
+            });
+
+            // Also pause on container hover (for mobile/focus)
+            const container = document.getElementById('book-slideshow');
+            container.addEventListener('mouseenter', () => { paused = true; });
+            container.addEventListener('mouseleave', () => { paused = false; });
+
+            showSlide(0);
+            startSlideshow();
+        })();
+    </script>
+    <main>
+        <section class="hero">
+            <h1>Discover stories with style</h1>
+            <p class="hero-subtext">A modern book showcase for readers and creators. Explore, get inspired, and find your next favorite book.</p>
+        </section>
+        <section class="about-section" id="about">
+            <h2>About Valbona Banka</h2>
+            <p>Valbona Banka is an acclaimed author whose literary journey began in the picturesque landscapes of her homeland. With a passion for storytelling that transcends cultural boundaries, she has crafted narratives that resonate with readers worldwide.</p>
+            <p>Her writing style is characterized by its lyrical prose, deep emotional resonance, and ability to transport readers to worlds both familiar and fantastical. Through her works, Valbona explores themes of identity, belonging, and the human condition with sensitivity and insight.</p>
+            <p>With over a decade of writing experience and multiple published works, Valbona has received numerous literary awards and recognition for her contributions to contemporary literature. Her books have been translated into several languages, reaching readers across different cultures and continents.</p>
+            <p>When not crafting stories, Valbona can be found exploring new cultures, collecting stories from people she meets, or finding inspiration in the quiet moments of everyday life. She believes that every person has a story worth telling, and every story has the power to change lives.</p>
+        </section>
+        <section class="featured-book">
+            <div class="book-info">
+                <h2>FEATURED BOOK</h2>
+                <h3 data-i18n="book1Title">Tekno-Broni</h3>
+                <p class="author" data-i18n="book1Author">by Valbona Banka</p>
+                <p class="description" data-i18n="book1Desc">Ky roman nuk është vetëm një përballje mes botës së re tekno (nga rrjedh dhe titulli Tekno-Broni) dhe asaj të vjetrës, ku çdo gjë bëhej me dorë, por u tregon fëmijëve se vërtet teknologjia ka shumë të mira, ama çdo gjë duhet përdorur me masë, pa harruar kontaktin me natyrën.</p>
+                <a href="#gallery" class="portfolio-link" id="scroll-to-gallery">Shiko më shumë libra</a>
+                <script>
+                  document.addEventListener('DOMContentLoaded', function() {
+                    var btn = document.getElementById('scroll-to-gallery');
+                    if (btn) {
+                      btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var target = document.getElementById('gallery');
+                        if (target) {
+                          target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      });
+                    }
+                  });
+                </script>
+            </div>
+            <div class="book-image">
+                <img src="https://cloudfront.bukinist.al/28377-large_default/tekno-broni.jpg" alt="Tekno-Broni">
+            </div>
+        </section>
+        <section class="book-gallery" id="gallery">
+            <h2 class="gallery-title">Book Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="https://cloudfront.bukinist.al/24199-large_default/aria-hidh-e-prit.jpg" alt="Aria Hidh e Prit">
+                    <div class="gallery-info">
+                        <h3 data-i18n="book2Title">Aria Hidh e Prit</h3>
+                        <p class="author" data-i18n="book2Author">by Valbona Banka</p>
+                        <p class="description" data-i18n="book2Desc">Ky libër është vetëm fillimi i rrugëtimit të Arias çamarroke, plot vitalitet dhe energji pozitive: Një histori për dashurinë pa kushte që buron në zemrën e çdo femije! Forcën brenda vetes dhe të vërtetën që thyen barriera dhe kapërcen kufijtë! Në mbyllje të procesit të votimit online për librin më të mirë të vitit 2022 nga Bukinist.al dhe blogu Leximtari.al, - në kategorinë "Libri për fëmijë", është përzgjedhur libri "Aria, hidh e prit" me autore Valbona Banka, hedhur në qarkullim nga shtëpia botuese "Mediaprint", me redaktore Arta Markun.</p>
+                        <a href="aria-hidh-e-prit.html" class="learn-more-btn" data-i18n="learnMore">Learn More</a>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://cloudfront.bukinist.al/26317-large_default/aria-fet-e-fet.jpg" alt="Aria Fet e fet">
+                    <div class="gallery-info">
+                        <h3 data-i18n="book3Title">Aria Fet e fet</h3>
+                        <p class="author" data-i18n="book3Author">by Valbona Banka</p>
+                        <p class="description" data-i18n="book3Desc">Le të udhëtojmë edhe ne me Arian dhe personazhet e tjera, mes situatave të papritura dhe humorit, për të shijuar këtë përvojë.</p>
+                        <a href="aria-fet-e-fet.html" class="learn-more-btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://cloudfront.bukinist.al/28783-large_default/aria-ne-doren-time.jpg" alt="Aria Në dorën time">
+                    <div class="gallery-info">
+                        <h3 data-i18n="book4Title">Aria Në dorën time</h3>
+                        <p class="author" data-i18n="book4Author">by Valbona Banka</p>
+                        <p class="description" data-i18n="book4Desc">An epic adventure that takes readers on a journey across continents and through time. This historical fiction masterpiece brings the past to life with vivid detail.</p>
+                        <a href="aria-ne-doren-time.html" class="learn-more-btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=400&q=80" alt="Book 4">
+                    <div class="gallery-info">
+                        <h3 data-i18n="book5Title">Yjet e Natës</h3>
+                        <p class="author" data-i18n="book5Author">by Valbona Banka</p>
+                        <p class="description" data-i18n="book5Desc">Një udhëtim magjepsës nëpër botën e fantazisë, ku ëndrrat dhe realiteti ndërthuren në mënyrë të pabesueshme.</p>
+                        <a href="yjet-e-nates.html" class="learn-more-btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80" alt="Book 5">
+                    <div class="gallery-info">
+                        <h3 data-i18n="book6Title">Fjalët që Shërojnë</h3>
+                        <p class="author" data-i18n="book6Author">by Valbona Banka</p>
+                        <p class="description" data-i18n="book6Desc">Një përmbledhje tregimesh që prekin zemrën dhe frymëzojnë shpirtin, duke sjellë shpresë dhe forcë në çdo faqe.</p>
+                        <a href="fjalet-qe-sherojne.html" class="learn-more-btn">Learn More</a>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://images.unsplash.com/photo-1463320898484-cdee8141c787?auto=format&fit=crop&w=400&q=80" alt="Book 6">
+                    <div class="gallery-info">
+                        <h3 data-i18n="book7Title">Rrugëtimi i Zemrës</h3>
+                        <p class="author" data-i18n="book7Author">by Valbona Banka</p>
+                        <p class="description" data-i18n="book7Desc">Një roman emocionues për dashurinë, humbjen dhe gjetjen e vetvetes nëpërmjet sfidave të jetës.</p>
+                        <a href="rrugetimi-i-zemres.html" class="learn-more-btn">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all "Learn More" buttons
+            const learnMoreButtons = document.querySelectorAll('.learn-more-btn');
+            
+            // Add click event listeners to each button
+            learnMoreButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default navigation
+                    
+                    const href = this.getAttribute('href');
+                    if (href) {
+                        // Add a smooth transition effect
+                        document.body.style.transition = 'opacity 0.3s ease-out';
+                        document.body.style.opacity = '0.8';
+                        
+                        // Navigate to the page after a brief delay for smooth transition
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 300);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,243 @@
+<!-- Unified Page with Modern Tabs (No Page Reload) -->
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valbona Banka - Blog dhe Çmime</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --text: #181818;
+      --accent: #b97a7a;
+      --card: #fff;
+    }
+    body.dark-theme {
+      --bg: #181818;
+      --text: #f7f7f7;
+      --accent: #b97a7a;
+      --card: #222;
+    }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    .site-header {
+      background: var(--card);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    nav a:hover, nav a.active-tab {
+      background: var(--accent);
+      color: #fff;
+    }
+    .toggle-btn {
+      margin-left: 10px;
+      background: none;
+      border: 2px solid var(--accent);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    .toggle-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .editor, .awards-section, .blog-section, .login-section {
+      display: none;
+      max-width: 800px;
+      margin: 30px auto;
+      background: var(--card);
+      padding: 24px;
+      border-radius: 18px;
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .active-section {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    input, textarea, select {
+      width: 100%; padding: 10px; margin-bottom: 14px;
+      background: var(--bg);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      border-radius: 10px;
+    }
+    button {
+      background: var(--accent); color: #fff; border: none;
+      padding: 10px 18px; border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #a25c5c;
+    }
+    .post, .award-item {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--bg);
+      border-left: 4px solid var(--accent);
+      transition: transform 0.2s ease;
+    }
+    .post:hover, .award-item:hover {
+      transform: translateY(-3px);
+    }
+    .back-home {
+      display: inline-block;
+      margin-top: 20px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .back-home:hover {
+      color: #a25c5c;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-title">Valbona Banka</div>
+    <nav>
+      <a href="index.html">🏠 Kryefaqja</a>
+      <a id="tab-blog" onclick="showSection('blog')" class="active-tab">Blog</a>
+      <a id="tab-awards" onclick="showSection('awards')">Çmime</a>
+    </nav>
+    <div>
+      <button onclick="toggleLang()" class="toggle-btn">🌐</button>
+      <button onclick="toggleTheme()" class="toggle-btn" id="theme-btn">🌙</button>
+      <button onclick="showSection('login')" class="toggle-btn">🔒</button>
+    </div>
+  </header>
+
+  <section id="blog" class="blog-section active-section">
+    <h2>Postimet</h2>
+    <div id="blog-posts"></div>
+  </section>
+
+  <section id="awards" class="awards-section">
+    <h2>Çmime dhe Vlerësime</h2>
+    <div id="award-list"></div>
+  </section>
+
+  <section id="editor" class="editor">
+    <h3>Shto përmbajtje të re</h3>
+    <select id="editor-type">
+      <option value="blog">Blog</option>
+      <option value="award">Çmim</option>
+    </select>
+    <input id="editor-title" type="text" placeholder="Titulli" />
+    <textarea id="editor-body" rows="5" placeholder="Përmbajtja..."></textarea>
+    <button onclick="addContent()">Shto</button>
+  </section>
+
+  <section id="login" class="login-section">
+    <h3>Hyr si Administrator</h3>
+    <input id="admin-password" type="password" placeholder="Fjalëkalimi" />
+    <button onclick="adminLogin()">Hyr</button>
+  </section>
+
+  <script>
+    const ADMIN_PASS = "valbona2025";
+    let isAdmin = false;
+
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active-section'));
+      document.getElementById(id).classList.add('active-section');
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-tab'));
+      const tab = document.getElementById('tab-' + id);
+      if (tab) tab.classList.add('active-tab');
+    }
+
+    function toggleTheme() {
+      const dark = document.body.classList.toggle('dark-theme');
+      localStorage.setItem('prefers-dark', dark);
+    }
+
+    function toggleLang() {
+      alert('Për momentin, shumëgjuhësia nuk është aktivizuar.');
+    }
+
+    function adminLogin() {
+      const pass = document.getElementById('admin-password').value;
+      if (pass === ADMIN_PASS) {
+        isAdmin = true;
+        document.getElementById('editor').style.display = 'block';
+        document.getElementById('login').style.display = 'none';
+        alert('Hyrja si admin u krye me sukses.');
+      } else {
+        alert("Gabim!");
+      }
+    }
+
+    function addContent() {
+      const type = document.getElementById('editor-type').value;
+      const title = document.getElementById('editor-title').value.trim();
+      const body = document.getElementById('editor-body').value.trim();
+      if (!title || !body) return alert("Plotëso të gjitha fushat");
+
+      const item = { title, body, date: new Date().toLocaleDateString("sq-AL") };
+      const key = type === 'blog' ? 'posts' : 'awards';
+      const list = JSON.parse(localStorage.getItem(key)) || [];
+      list.push(item);
+      localStorage.setItem(key, JSON.stringify(list));
+      document.getElementById('editor-title').value = '';
+      document.getElementById('editor-body').value = '';
+      loadContent();
+    }
+
+    function loadContent() {
+      const posts = JSON.parse(localStorage.getItem("posts")) || [];
+      const awards = JSON.parse(localStorage.getItem("awards")) || [];
+
+      document.getElementById("blog-posts").innerHTML = posts.map(p => `
+        <div class="post">
+          <h3>${p.title}</h3>
+          <small>${p.date}</small>
+          <p>${p.body.replace(/\n/g, '<br>')}</p>
+        </div>`).reverse().join("");
+
+      document.getElementById("award-list").innerHTML = awards.map(a => `
+        <div class="award-item">
+          <h3>${a.title}</h3>
+          <small>${a.date}</small>
+          <p>${a.body.replace(/\n/g, '<br>')}</p>
+        </div>`).reverse().join("");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const prefersDark = localStorage.getItem("prefers-dark") === "true";
+      if (prefersDark) document.body.classList.add("dark-theme");
+      loadContent();
+    });
+  </script>
+</body>
+</html>
