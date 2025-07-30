@@ -119,6 +119,44 @@ body.light-theme {
         max-width: 90px;
     }
 }
+
+.slideshow-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(185, 122, 122, 0.25);
+  border: 2px solid var(--slideshow-border);
+  color: var(--slideshow-title);
+  font-size: 1.5rem;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s, transform 0.2s;
+}
+.slideshow-arrow:hover {
+  background-color: rgba(185, 122, 122, 0.4);
+  transform: translateY(-50%) scale(1.05);
+}
+.slideshow-arrow.prev {
+  left: 12px;
+}
+.slideshow-arrow.next {
+  right: 12px;
+}
+@media (max-width: 600px) {
+  .slideshow-arrow {
+    font-size: 1.2rem;
+    padding: 6px 10px;
+  }
+  .slideshow-arrow.prev {
+    left: 6px;
+  }
+  .slideshow-arrow.next {
+    right: 6px;
+  }
+}
+
 </style>
 <html lang="en">
 <head>
@@ -242,10 +280,98 @@ body.light-theme {
             max-width: 90px;
         }
     }
+    site-footer {
+    background-color: var(--slideshow-bg);
+    color: var(--slideshow-title);
+    padding: 2rem 1rem 1rem;
+    font-family: 'Montserrat', sans-serif;
+    border-top: 2px solid var(--slideshow-border);
+    margin-top: 4rem;
+  }
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .footer-column {
+    flex: 1;
+    min-width: 200px;
+  }
+  .footer-column h3, .footer-column h4 {
+    margin-bottom: 0.5rem;
+  }
+  .footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .footer-column li {
+    margin: 0.25rem 0;
+  }
+  .footer-column a {
+    text-decoration: none;
+    color: var(--slideshow-title);
+    transition: color 0.3s;
+  }
+  .footer-column a:hover {
+    color: var(--slideshow-indicator);
+  }
+  .footer-bottom {
+    text-align: center;
+    font-size: 0.85rem;
+    margin-top: 1.5rem;
+    color: #aaa;
+  }
+</style>
+
+
+<style>
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #252336, #3d3a5d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 9999;
+    animation: fadeOut 1s ease-in-out 2.5s forwards;
+  }
+
+  .loader-text {
+    font-size: 2.5rem;
+    color: white;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 1s ease-in 0.5s forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
 </style>
 
 </head>
 <body>
+
+<!-- Loader -->
+<div id="loader">
+  <h1 class="loader-text">Mirë Se Vjen</h1>
+</div>
+
     <header class="site-header">
         <div class="container header-flex">
             <div class="site-title" data-i18n="siteTitle">BOOK SHOWCASE</div>
@@ -288,7 +414,11 @@ body.light-theme {
                     </a>
                 </div>
             </div>
-            <div class="slideshow-indicators" id="slideshow-indicators">
+            
+        <button class="slideshow-arrow prev" aria-label="Previous slide">&#10094;</button>
+        <button class="slideshow-arrow next" aria-label="Next slide">&#10095;</button>
+
+        <div class="slideshow-indicators" id="slideshow-indicators">
                 <span class="slideshow-indicator active" data-slide="0"></span>
                 <span class="slideshow-indicator" data-slide="1"></span>
                 <span class="slideshow-indicator" data-slide="2"></span>
@@ -345,6 +475,24 @@ body.light-theme {
 
             showSlide(0);
             startSlideshow();
+
+  // Manual Arrow Controls
+  const prevBtn = document.querySelector('.slideshow-arrow.prev');
+  const nextBtn = document.querySelector('.slideshow-arrow.next');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      let prev = (current - 1 + slides.length) % slides.length;
+      showSlide(prev);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+    });
+  }
+
         })();
     </script>
     <main>
@@ -385,65 +533,6 @@ body.light-theme {
                 <img src="https://cloudfront.bukinist.al/28377-large_default/tekno-broni.jpg" alt="Tekno-Broni">
             </div>
         </section>
-        <section class="book-gallery" id="gallery">
-            <h2 class="gallery-title">Book Gallery</h2>
-            <div class="gallery-grid">
-                <div class="gallery-card">
-                    <img src="https://cloudfront.bukinist.al/24199-large_default/aria-hidh-e-prit.jpg" alt="Aria Hidh e Prit">
-                    <div class="gallery-info">
-                        <h3 data-i18n="book2Title">Aria Hidh e Prit</h3>
-                        <p class="author" data-i18n="book2Author">by Valbona Banka</p>
-                        <p class="description" data-i18n="book2Desc">Ky libër është vetëm fillimi i rrugëtimit të Arias çamarroke, plot vitalitet dhe energji pozitive: Një histori për dashurinë pa kushte që buron në zemrën e çdo femije! Forcën brenda vetes dhe të vërtetën që thyen barriera dhe kapërcen kufijtë! Në mbyllje të procesit të votimit online për librin më të mirë të vitit 2022 nga Bukinist.al dhe blogu Leximtari.al, - në kategorinë "Libri për fëmijë", është përzgjedhur libri "Aria, hidh e prit" me autore Valbona Banka, hedhur në qarkullim nga shtëpia botuese "Mediaprint", me redaktore Arta Markun.</p>
-                        <a href="aria-hidh-e-prit.html" class="learn-more-btn" data-i18n="learnMore">Learn More</a>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="https://cloudfront.bukinist.al/26317-large_default/aria-fet-e-fet.jpg" alt="Aria Fet e fet">
-                    <div class="gallery-info">
-                        <h3 data-i18n="book3Title">Aria Fet e fet</h3>
-                        <p class="author" data-i18n="book3Author">by Valbona Banka</p>
-                        <p class="description" data-i18n="book3Desc">Le të udhëtojmë edhe ne me Arian dhe personazhet e tjera, mes situatave të papritura dhe humorit, për të shijuar këtë përvojë.</p>
-                        <a href="aria-fet-e-fet.html" class="learn-more-btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="https://cloudfront.bukinist.al/28783-large_default/aria-ne-doren-time.jpg" alt="Aria Në dorën time">
-                    <div class="gallery-info">
-                        <h3 data-i18n="book4Title">Aria Në dorën time</h3>
-                        <p class="author" data-i18n="book4Author">by Valbona Banka</p>
-                        <p class="description" data-i18n="book4Desc">An epic adventure that takes readers on a journey across continents and through time. This historical fiction masterpiece brings the past to life with vivid detail.</p>
-                        <a href="aria-ne-doren-time.html" class="learn-more-btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=400&q=80" alt="Book 4">
-                    <div class="gallery-info">
-                        <h3 data-i18n="book5Title">Yjet e Natës</h3>
-                        <p class="author" data-i18n="book5Author">by Valbona Banka</p>
-                        <p class="description" data-i18n="book5Desc">Një udhëtim magjepsës nëpër botën e fantazisë, ku ëndrrat dhe realiteti ndërthuren në mënyrë të pabesueshme.</p>
-                        <a href="yjet-e-nates.html" class="learn-more-btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80" alt="Book 5">
-                    <div class="gallery-info">
-                        <h3 data-i18n="book6Title">Fjalët që Shërojnë</h3>
-                        <p class="author" data-i18n="book6Author">by Valbona Banka</p>
-                        <p class="description" data-i18n="book6Desc">Një përmbledhje tregimesh që prekin zemrën dhe frymëzojnë shpirtin, duke sjellë shpresë dhe forcë në çdo faqe.</p>
-                        <a href="fjalet-qe-sherojne.html" class="learn-more-btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="https://images.unsplash.com/photo-1463320898484-cdee8141c787?auto=format&fit=crop&w=400&q=80" alt="Book 6">
-                    <div class="gallery-info">
-                        <h3 data-i18n="book7Title">Rrugëtimi i Zemrës</h3>
-                        <p class="author" data-i18n="book7Author">by Valbona Banka</p>
-                        <p class="description" data-i18n="book7Desc">Një roman emocionues për dashurinë, humbjen dhe gjetjen e vetvetes nëpërmjet sfidave të jetës.</p>
-                        <a href="rrugetimi-i-zemres.html" class="learn-more-btn">Learn More</a>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
     <script src="script.js"></script>
     <script>
@@ -471,5 +560,42 @@ body.light-theme {
             });
         });
     </script>
+
+<script>
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      const loader = document.getElementById("loader");
+      if (loader) loader.style.display = "none";
+    }, 3000);
+  });
+</script>
+
+<footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-column">
+        <h3>Valbona Banka</h3>
+        <p>Letërsia që prek zemrën. Fjalët që shërojnë.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Faqet</h4>
+        <ul>
+          <li><a href="index.html">Kreu</a></li>
+          <li><a href="blog&awards.html">Blog & Çmime</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="books.html">Librat</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Kontakt</h4>
+        <p>Email: kontakt@valbonabanka.art</p>
+        <p>Instagram: @valbonabanka</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Valbona Banka. Të gjitha të drejtat e rezervuara.</p>
+    </div>
+  </footer>
+  
+
 </body>
 </html> 
